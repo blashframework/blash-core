@@ -1,11 +1,11 @@
 local currentAnnouncement = 0
-local announcementList = Blash.Config.Announcements.List
+local announcementList = Blash.Config.Announcements.List or {}
 
 CreateThread(function()
     while true do
         local sleep = (1000 * 60) * Blash.Config.Announcements.Interval
         
-        if announcementList >= 1 then
+        if #announcementList >= 1 then
             local announcementMessage = nil
 
             if Blash.Config.Announcements.Random then
