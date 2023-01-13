@@ -1,5 +1,6 @@
 BlashConfig = {}
 
+BlashConfig.General = {}
 BlashConfig.General.MaxPlayers = GetConvarInt('sv_maxclients', 48)
 BlashConfig.General.DefaultSpawn = vector4(-1035.71, -2731.87, 12.86, 0.0)
 BlashConfig.General.UpdateInterval = 5 -- in minutes
