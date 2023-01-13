@@ -17,8 +17,12 @@ function Blash.Functions.ConductVersionCheck(githubUsername, githubRepository)
                 message = string.format('You either edited your local version or Github is offline.')
             end
 
-            exports['boppe-logging']:Info(githubRepository,
-                message or 'There was an error while the version check was being conducted.')
+            if message then
+                exports['boppe-logging']:Info(githubRepository, 'NULL', message)
+            else
+                exports['boppe-logging']:Error(githubRepository, 'NULL',
+                    'There was an error while the version check was being conducted.')
+            end
         end
 
         PerformHttpRequest("https://raw.githubusercontent.com" .. updatePath .. "/master/version", checkVersion, "GET")
@@ -83,7 +87,7 @@ end
 function Blash.Functions.GetPlayers()
     local sources = {}
     for k in pairs(Blash.Players) do
-        sources[#sources+1] = k
+        sources[#sources + 1] = k
     end
     return sources
 end
@@ -100,7 +104,7 @@ function Blash.Functions.SetPlayerBucket(source, bucket)
     if source and bucket then
         local plicense = Blash.Functions.GetIdentifier(source, 'license')
         SetPlayerRoutingBucket(source, bucket)
-        Blash.Player_Buckets[plicense] = {id = source, bucket = bucket}
+        Blash.Player_Buckets[plicense] = { id = source, bucket = bucket }
         return true
     else
         return false
@@ -110,7 +114,7 @@ end
 function Blash.Functions.SetEntityBucket(entity, bucket)
     if entity and bucket then
         SetEntityRoutingBucket(entity, bucket)
-        Blash.Entity_Buckets[entity] = {id = entity, bucket = bucket}
+        Blash.Entity_Buckets[entity] = { id = entity, bucket = bucket }
         return true
     else
         return false
@@ -204,7 +208,7 @@ end
 function Blash.Functions.GetPermission(source)
     local src = source
     local perms = {}
-    for _, v in pairs (Blash.Config.Server.Permissions) do
+    for _, v in pairs(Blash.Config.Server.Permissions) do
         if IsPlayerAceAllowed(src, v) then
             perms[v] = true
         end
@@ -218,7 +222,12 @@ function Blash.Functions.IsPlayerBanned(source)
     if not result then return false end
     if os.time() < result.expire then
         local timeTable = os.date('*t', tonumber(result.expire))
-        return true, 'You have been banned from the server:\n' .. result.reason .. '\nYour ban expires ' .. timeTable.day .. '/' .. timeTable.month .. '/' .. timeTable.year .. ' ' .. timeTable.hour .. ':' .. timeTable.min .. '\n'
+        return true,
+            'You have been banned from the server:\n' ..
+            result.reason ..
+            '\nYour ban expires ' ..
+            timeTable.day ..
+            '/' .. timeTable.month .. '/' .. timeTable.year .. ' ' .. timeTable.hour .. ':' .. timeTable.min .. '\n'
     else
         MySQL.query('DELETE FROM bans WHERE id = ?', { result.id })
     end
