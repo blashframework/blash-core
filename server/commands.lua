@@ -1,5 +1,6 @@
 Blash.Commands = {}
 Blash.Commands.List = {}
+Blash.Commands.IgnoreList = { ['god'] = true, ['user'] = true }
 
 CreateThread(function()
     local permissions = BlashConfig.Server.Permissions
@@ -53,7 +54,7 @@ function Blash.Commands.Register(name, help, arguments, argsrequired, callback, 
     }
 end
 
-Blash.Commands.Add('tp', Lang:t("command.tp.help"),
+Blash.Commands.Register('tp', Lang:t("command.tp.help"),
     { { name = Lang:t("command.tp.params.x.name"), help = Lang:t("command.tp.params.x.help") },
         { name = Lang:t("command.tp.params.y.name"), help = Lang:t("command.tp.params.y.help") },
         { name = Lang:t("command.tp.params.z.name"), help = Lang:t("command.tp.params.z.help") } }, false,
@@ -84,6 +85,6 @@ Blash.Commands.Add('tp', Lang:t("command.tp.help"),
         end
     end, 'admin')
 
-Blash.Commands.Add('tpm', Lang:t("command.tpm.help"), {}, false, function(source)
+Blash.Commands.Register('tpm', Lang:t("command.tpm.help"), {}, false, function(source)
     TriggerClientEvent('Blash:Command:GoToMarker', source)
 end, 'admin')
