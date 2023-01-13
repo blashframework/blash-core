@@ -6,9 +6,10 @@ function Blash.Functions.ConductVersionCheck(githubUsername, githubRepository)
     CreateThread(function()
         local updatePath = string.format('/%s/%s', githubUsername, githubRepository)
 
-        local function checkVersion(_, responseText, _)
+        local function checkVersion(responseText)
             local curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
             local message = nil
+            print(curVersion, tonumber(curVersion))
 
             if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
                 message = string.format('Outdated; an update should be made.\nCurrent: %s | Github: %s', curVersion,
@@ -25,7 +26,10 @@ function Blash.Functions.ConductVersionCheck(githubUsername, githubRepository)
             end
         end
 
-        PerformHttpRequest("https://raw.githubusercontent.com" .. updatePath .. "/master/version", checkVersion, "GET")
+        local p = promise.new()
+        PerformHttpRequest("https://raw.githubusercontent.com" .. updatePath .. "/master/version", function (_, cb, _) p:resolve(cb) end, "GET")
+        local data = Citizen.Await(p)
+        checkVersion(data)
     end)
 end
 
@@ -254,3 +258,5 @@ end
 function Blash.Functions.Notify(source, text, type)
     TriggerClientEvent('Blash:Notify', source, text, type)
 end
+
+Blash.Functions.ConductVersionCheck('blashframework', 'blash-core')
