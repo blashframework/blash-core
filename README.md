@@ -1,0 +1,2 @@
+## Notes
+Please be aware that a lot of this code mimics what is done in the QBCore framework. I think they have done a good job with how they wrote qb-core and there is no reason for me to re-invent the wheel. To my knowledge, their license permits use of code like this. If I am wrong, please have an administrator from the QBCore community contact me to have the issue resolved.
