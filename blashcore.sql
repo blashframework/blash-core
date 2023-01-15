@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `players` (
   `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`license`),
   KEY `id` (`id`),
-  KEY `last_updated` (`last_updated`),
+  KEY `last_updated` (`last_updated`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `bans` (
