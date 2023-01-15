@@ -5,22 +5,24 @@ Blash.Entity_Buckets = {}
 function Blash.Functions.ConductVersionCheck(githubUsername, githubRepository)
     CreateThread(function()
         local updatePath = string.format('/%s/%s', githubUsername, githubRepository)
+        local showLog = false
 
         local function checkVersion(responseText)
             local curVersion = LoadResourceFile(GetCurrentResourceName(), "version")
             local message = nil
-            print(curVersion, tonumber(curVersion))
 
             if curVersion ~= responseText and tonumber(curVersion) < tonumber(responseText) then
                 message = string.format('Outdated; an update should be made.\nCurrent: %s | Github: %s', curVersion,
                     responseText)
+                    showLog = true
             elseif tonumber(curVersion) > tonumber(responseText) then
                 message = string.format('You either edited your local version or Github is offline.')
+                showLog = true
             end
 
-            if message then
+            if message and showLog then
                 exports['boppe-logging']:Info(githubRepository, 'NULL', message)
-            else
+            elseif not message and showLog then
                 exports['boppe-logging']:Error(githubRepository, 'NULL',
                     'There was an error while the version check was being conducted.')
             end
@@ -38,7 +40,7 @@ function Blash.Functions.DiscordLog(name, title, color, message)
     local embedData = {
         {
             ['title'] = title,
-            ['color'] = Blash.Config.Colors[color] or Blash.Config.Colors['default'],
+            ['color'] = Blash.Config.DiscordColors[color] or Blash.Config.DiscordColors['default'],
             ['footer'] = {
                 ['text'] = os.date('%c'),
             },
