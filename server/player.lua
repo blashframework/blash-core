@@ -1,12 +1,15 @@
 Blash.Players = {}
 Blash.Player = {}
 
-function Blash.Player.Login(source, newData)
+function Blash.Player.Login(source, license)
     if source and source ~= '' then
-        Blash.Player.CheckPlayerData(source, newData)
+        local PlayerData = MySQL.prepare.await('SELECT * FROM players where license = ?', { license })
+        if not PlayerData then PlayerData = {} end
+        PlayerData.metadata = json.decode(PlayerData.metadata) or {}
+        Blash.Player.CheckPlayerData(source, PlayerData)
         return true
     else
-        Blash.ShowError(GetCurrentResourceName(), 'ERROR BLASH.PLAYER.LOGIN - NO SOURCE GIVEN!')
+        exports['boppe-logging']:Error('blash-core', 'BLASH.PLAYER.LOGIN', 'NO SOURCE GIVEN!')
         return false
     end
 end
@@ -115,9 +118,9 @@ function Blash.Player.Save(source)
             name = PlayerData.name,
             metadata = json.encode(PlayerData.metadata)
         })
-        Blash.ShowSuccess(GetCurrentResourceName(), PlayerData.name .. ' PLAYER SAVED!')
+        exports['boppe-logging']:Info('blash-core', 'BLASH.PLAYER.SAVE', PlayerData.name .. ' PLAYER SAVED!')
     else
-        Blash.ShowError(GetCurrentResourceName(), 'ERROR Blash.PLAYER.SAVE - PLAYERDATA IS EMPTY!')
+        exports['boppe-logging']:Error('blash-core', 'BLASH.PLAYER.SAVE', 'PLAYERDATA IS EMPTY!')
     end
 end
 
@@ -128,8 +131,8 @@ function Blash.Player.SaveOffline(PlayerData)
             name = PlayerData.name,
             metadata = json.encode(PlayerData.metadata)
         })
-        Blash.ShowSuccess(GetCurrentResourceName(), PlayerData.name .. ' PLAYER SAVED!')
+        exports['boppe-logging']:Info('blash-core', 'BLASH.PLAYER.SAVE', PlayerData.name .. ' PLAYER SAVED!')
     else
-        Blash.ShowError(GetCurrentResourceName(), 'ERROR Blash.PLAYER.SAVE - PLAYERDATA IS EMPTY!')
+        exports['boppe-logging']:Error('blash-core', 'BLASH.PLAYER.SAVE', 'PLAYERDATA IS EMPTY!')
     end
 end
