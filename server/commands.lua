@@ -1,6 +1,6 @@
 Blash.Commands = {}
 Blash.Commands.List = {}
-Blash.Commands.IgnoreList = { ['god'] = true, ['user'] = true }
+Blash.Commands.IgnoreList = { ['admin'] = true, ['user'] = true }
 
 CreateThread(function()
     local permissions = BlashConfig.Server.Permissions
